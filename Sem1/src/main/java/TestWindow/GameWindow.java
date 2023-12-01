@@ -11,7 +11,7 @@ public class GameWindow extends JFrame {
     //private static final int WINDOW_POSX = 800;
     //private static final int WINDOW_POSY = 300;
     Map map;
-    //SettingsWindows settings;
+    SettingsWindows settings;//
     JButton btnStart = new JButton("Start New Game");
     JButton btnExit = new JButton("Exit");
 
@@ -25,19 +25,19 @@ public class GameWindow extends JFrame {
         setResizable(false);
         map = new Map();
 
-        //settings = new SettingsWindows(this);
+        settings = new SettingsWindows(this);//
         btnStart.addActionListener(new ActionListener() {
-            //@Override
-            //public void actionPerformed(ActionEvent e) {
-            //settings.setVisible(true);
-            //}
             @Override
             public void actionPerformed(ActionEvent e) {
-                startNewGame(0, 3, 3, 3);
-                setVisible(true);
+            settings.setVisible(true);
             }
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                startNewGame(0, 3, 3, 3);
+//                setVisible(true);
+//            }
         });
-        //settings.setVisible(true);
+        settings.setVisible(true);//
 
         btnExit.addActionListener(new ActionListener() {
             @Override

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Array;
 import java.util.Random;
 
 public class Map extends JPanel {
@@ -15,7 +16,7 @@ public class Map extends JPanel {
     private static final int STATE_WIN_HUMAN = 1;
     private static final int STATE_WIN_AI = 2;
     private static final String MSG_DRAW = "Ничья!";
-    private static final String MSG_WIN_HUMAN = "Победил игрок!";
+    private static final String MSG_WIN_HUMAN = "Вы победили!";
     private static final String MSG_WIN_AI = "Победил компьютер!";
 
     private final int HUMAN_DOT = 1;
@@ -24,7 +25,7 @@ public class Map extends JPanel {
 
     private int fieldSizeY = 3;
     private int fieldSizeX = 3;
-    private char[][] field;
+    private int[][] field;
 
     private int panelWidth;
     private int panelHeight;
@@ -36,7 +37,7 @@ public class Map extends JPanel {
     private void initMap() {
         fieldSizeX = 3;
         fieldSizeY = 3;
-        field = new char[fieldSizeY][fieldSizeX];
+        field = new int[fieldSizeY][fieldSizeX];
         for (int i = 0; i < fieldSizeY; i++) {
             for (int j = 0; j < fieldSizeX; j++) {
                 field[i][j] = EMPTY_DOT;
@@ -61,7 +62,28 @@ public class Map extends JPanel {
         field[y][x] = AI_DOT;
     }
 
+    private boolean isLineFull(int[] line) {
+        if (line[0] != EMPTY_DOT) {
+            int temp = line[0];
+            for (int i = 1; i < line.length; i++) {
+                if (line[i] != temp) return false;
+            }
+            System.out.println("--Full line--");
+            return true;
+        }
+        return false;
+    }
+
+    private int[][] rotatedArray(int[][] array) {
+        int[][] rotated = new int[array.length][array[0].length];
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
+                rotated[i][j] = array[j][i];
+        return rotated;
+    }
+
     private boolean checkWin(int c) {
+        /* проверка на выигрыш
         if (field[0][0] == c && field[0][1] == c && field[0][2] == c) return true;
         if (field[1][0] == c && field[1][1] == c && field[1][2] == c) return true;
         if (field[2][0] == c && field[2][1] == c && field[2][2] == c) return true;
@@ -71,7 +93,25 @@ public class Map extends JPanel {
         if (field[0][2] == c && field[1][2] == c && field[2][2] == c) return true;
 
         if (field[0][0] == c && field[1][1] == c && field[2][2] == c) return true;
-        if (field[0][2] == c && field[1][1] == c && field[2][0] == c) return true;
+        if (field[0][2] == c && field[1][1] == c && field[2][0] == c) return true;*/
+        for (int y = 0; y < field.length; y++)
+            if (isLineFull(field[y])) return true; // проверка по строкам
+
+        int[][] fieldRot = rotatedArray(field); // переворачивание поля для проверки по столбцам
+
+        for (int x = 0; x < fieldRot.length; x++)
+            if (isLineFull(fieldRot[x])) return true; // проверка по столбцам
+
+        int[] diagA = new int[field.length]; // получение диагонали A
+        for (int i = 0; i < field.length; i++)
+            diagA[i] = field[i][i];
+        if (isLineFull(diagA)) return true; // проверка диагонали A
+
+        int[] diagB = new int[field.length]; // получение диагонали B
+        for (int i = 0; i < field.length; i++)
+            diagB[i] = field[field.length - 1 - i][i];
+        if (isLineFull(diagB)) return true; // проверка диагонали B
+
         return false;
     }
 
@@ -86,11 +126,9 @@ public class Map extends JPanel {
     }
 
     private boolean isMapFull() {
-        for (int i = 0; i < fieldSizeY; i++) {
-            for (int j = 0; j < fieldSizeX; j++) {
+        for (int i = 0; i < fieldSizeY; i++)
+            for (int j = 0; j < fieldSizeX; j++)
                 if (field[i][j] == EMPTY_DOT) return false;
-            }
-        }
         return true;
     }
 
@@ -98,7 +136,7 @@ public class Map extends JPanel {
         if (isGameOver || !isInitialized) return;
         int cellX = e.getX() / cellWidth;
         int cellY = e.getY() / cellHeight;
-//        System.out.printf("x=%d, y=%d\n", cellX, cellY);
+        //System.out.printf("x=%d, y=%d\n", cellX, cellY);
         if (!isValidCell(cellX, cellY) || !isEmptyCell(cellX, cellY)) return;
         field[cellY][cellX] = HUMAN_DOT;
         if (checkEndGame(HUMAN_DOT, STATE_WIN_HUMAN)) return;
@@ -124,7 +162,7 @@ public class Map extends JPanel {
     }
 
     void startNewGame(int mode, int fSizeX, int fSizeY, int winLen) {
-        System.out.printf("Mode: %d;\nSize: x=%d, y=%d;\nWinLen: %d,",
+        System.out.printf("Mode: %d;\nSize: x=%d, y=%d;\nWinLen: %d\n",
                 mode, fSizeX, fSizeY, winLen);
         initMap();
         isGameOver = false;
