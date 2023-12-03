@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Array;
 import java.util.Random;
 
 public class Map extends JPanel {
@@ -34,15 +32,23 @@ public class Map extends JPanel {
     private boolean isGameOver;
     private boolean isInitialized;
 
+    public void setGameOverType(int gameOverType) {
+        this.gameOverType = gameOverType;
+    }
+
+    public void setFieldSizeY(int fieldSizeY) {
+        this.fieldSizeY = fieldSizeY;
+    }
+
+    public void setFieldSizeX(int fieldSizeX) {
+        this.fieldSizeX = fieldSizeX;
+    }
+
     private void initMap() {
-        fieldSizeX = 3;
-        fieldSizeY = 3;
         field = new int[fieldSizeY][fieldSizeX];
-        for (int i = 0; i < fieldSizeY; i++) {
-            for (int j = 0; j < fieldSizeX; j++) {
+        for (int i = 0; i < fieldSizeY; i++)
+            for (int j = 0; j < fieldSizeX; j++)
                 field[i][j] = EMPTY_DOT;
-            }
-        }
     }
 
     private boolean isValidCell(int x, int y) {
@@ -82,7 +88,7 @@ public class Map extends JPanel {
         return rotated;
     }
 
-    private boolean checkWin(int c) {
+    private boolean isWin(int c) {
         /* проверка на выигрыш
         if (field[0][0] == c && field[0][1] == c && field[0][2] == c) return true;
         if (field[1][0] == c && field[1][1] == c && field[1][2] == c) return true;
@@ -139,14 +145,14 @@ public class Map extends JPanel {
         //System.out.printf("x=%d, y=%d\n", cellX, cellY);
         if (!isValidCell(cellX, cellY) || !isEmptyCell(cellX, cellY)) return;
         field[cellY][cellX] = HUMAN_DOT;
-        if (checkEndGame(HUMAN_DOT, STATE_WIN_HUMAN)) return;
+        if (isGameEnd(HUMAN_DOT, STATE_WIN_HUMAN)) return;
         aiTurn();
         repaint();
-        if (checkEndGame(AI_DOT, STATE_WIN_AI)) return;
+        if (isGameEnd(AI_DOT, STATE_WIN_AI)) return;
     }
 
-    private boolean checkEndGame(int dot, int gameOverType) {
-        if (checkWin(dot)) {
+    private boolean isGameEnd(int dot, int gameOverType) {
+        if (isWin(dot)) {
             this.gameOverType = gameOverType;
             isGameOver = true;
             repaint();
@@ -161,9 +167,7 @@ public class Map extends JPanel {
         return false;
     }
 
-    void startNewGame(int mode, int fSizeX, int fSizeY, int winLen) {
-        System.out.printf("Mode: %d;\nSize: x=%d, y=%d;\nWinLen: %d\n",
-                mode, fSizeX, fSizeY, winLen);
+    void startNewGame(int mode, int winLen) {
         initMap();
         isGameOver = false;
         isInitialized = true;
@@ -180,15 +184,15 @@ public class Map extends JPanel {
         if (!isInitialized) return;
         panelWidth = getWidth();
         panelHeight = getHeight();
-        cellHeight = panelHeight / 3;
-        cellWidth = panelWidth / 3;
+        cellHeight = panelHeight / fieldSizeY;
+        cellWidth = panelWidth / fieldSizeX;
 
         g.setColor(Color.BLACK);
-        for (int h = 0; h < 3; h++) {
+        for (int h = 0; h < fieldSizeY; h++) {
             int y = h * cellHeight;
             g.drawLine(0, y, panelWidth, y);
         }
-        for (int w = 0; w < 3; w++) {
+        for (int w = 0; w < fieldSizeX; w++) {
             int x = w * cellHeight;
             g.drawLine(x, 0, x, panelHeight);
         }

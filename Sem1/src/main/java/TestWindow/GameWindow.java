@@ -29,13 +29,8 @@ public class GameWindow extends JFrame {
         btnStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            settings.setVisible(true);
+                settings.setVisible(true);
             }
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                startNewGame(0, 3, 3, 3);
-//                setVisible(true);
-//            }
         });
         settings.setVisible(true);//
 
@@ -54,7 +49,9 @@ public class GameWindow extends JFrame {
         setVisible(true);
     }
 
-    void startNewGame(int mode, int fSizeX, int fSizeY, int winLen) {
-        map.startNewGame(mode, fSizeX, fSizeY, winLen);
+    void startNewGame(int mode, int x, int y, int winLen) {
+        map.setFieldSizeX(x);
+        map.setFieldSizeY(y);
+        map.startNewGame(mode, winLen);
     }
 }
