@@ -62,7 +62,7 @@ public class SettingsWindows extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //System.out.printf("StartNewGame(%d,%d,%d,%d)", 0, slField.getValue(), slField.getValue(), slWinCount.getValue());
                 if (slWinCount.getValue() <= slField.getValue()) {
-                    gameWindow.startNewGame(0, slField.getValue(), slField.getValue(), slWinCount.getValue());
+                    gameWindow.startNewGame(rbHumVsPC.isSelected()?0:1, slField.getValue(), slField.getValue(), slWinCount.getValue());
                     setVisible(false);
                 }
             }

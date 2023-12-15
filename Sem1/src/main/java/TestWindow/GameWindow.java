@@ -11,7 +11,7 @@ public class GameWindow extends JFrame {
     //private static final int WINDOW_POSX = 800;
     //private static final int WINDOW_POSY = 300;
     Map map;
-    SettingsWindows settings;//
+    SettingsWindows settings;
     JButton btnStart = new JButton("Start New Game");
     JButton btnExit = new JButton("Exit");
 
@@ -23,16 +23,18 @@ public class GameWindow extends JFrame {
         setSize(scrHeight / 3, scrHeight / 3 + 50);
         setTitle("Игра \"Крестики-нолики\"");
         setResizable(false);
+        toBack();
         map = new Map();
 
-        settings = new SettingsWindows(this);//
+        settings = new SettingsWindows(this); //создание окна с настройками игры
+        settings.toFront();
         btnStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 settings.setVisible(true);
             }
         });
-        settings.setVisible(true);//
+        settings.setVisible(true);
 
         btnExit.addActionListener(new ActionListener() {
             @Override
