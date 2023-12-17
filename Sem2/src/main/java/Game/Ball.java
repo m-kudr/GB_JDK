@@ -9,14 +9,22 @@ public class Ball extends Sprite {
     private float vX;
     private float vY;
 
+    Ball() {
+        halfHeight = 20 + (float) (Math.random() * 50f); // высота шарика
+        halfWidth = halfHeight; // ширина шарика
+        color = new Color(rnd.nextInt()); // задаем случайный цвет шарика
+        vX = 100f + (float) (Math.random() * 200f); // задаем скорость смешения  шарика по Х
+        vY = 100f + (float) (Math.random() * 200f); // задаем скорость смешения  шарика по У
+    }
+
     @Override
-    void render(MainCanvas canvas, Graphics g) {
+    public void render(MainCanvas canvas, Graphics g) { // отрисовка шарика
         g.setColor(color);
         g.fillOval((int) getLeft(), (int) getTop(), (int) getWidth(), (int) getHeight());
     }
 
     @Override
-    void update(MainCanvas canvas, float deltaTime) {
+    public void update(MainCanvas canvas, float deltaTime) {  // смешение шарика
         x += vX * deltaTime;
         y += vY * deltaTime;
         if (getLeft() < canvas.getLeft()) {
@@ -27,7 +35,7 @@ public class Ball extends Sprite {
             setRight(canvas.getRight());
             vX = -vX;
         }
-        if (getTop() > canvas.getTop()) {
+        if (getTop() < canvas.getTop()) {
             setTop(canvas.getTop());
             vY = -vY;
         }
@@ -35,13 +43,5 @@ public class Ball extends Sprite {
             setBottom(canvas.getBottom());
             vY = -vY;
         }
-    }
-
-    Ball() {
-        halfHeight = 20 + (float) (Math.random() + 50f);
-        halfWidth = halfHeight;
-        color = new Color(rnd.nextInt());
-        vX = 100f + (float) (Math.random() + 200f);
-        vY = 100f + (float) (Math.random() + 200f);
     }
 }
