@@ -2,8 +2,7 @@ package Task_ServerChat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class ChatWindow extends JFrame {
     private static final String TITLE = "Chat client settings";
@@ -60,15 +59,28 @@ public class ChatWindow extends JFrame {
         //JTextPane txtPane = new JTextPane();
         //add(txtPane, BorderLayout.CENTER);
         JTextArea txtArea = new JTextArea();
-        txtArea.setAutoscrolls(true);
+        txtArea.setAutoscrolls(true); //?
+        txtArea.setEditable(false);
         txtArea.setLineWrap(true);
         add(txtArea, BorderLayout.CENTER);
 
         JPanel panBottom = new JPanel(new GridLayout(1, 2));
 
         JTextField fldMessage = new JTextField();
+//        fldMessage.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+//                    // something like...
+//                    //mTextField.getText();
+//                    // or...
+//                    //mButton.doClick();
+//                }
+//            }
+//        });
         panBottom.add(fldMessage);
-        fldMessage.setText("Sample message");
+        fldMessage.setText("Hello!");
+        fldMessage.setEnabled(false);
 
         panBottom.add(btnSend);
         btnSend.setEnabled(false);
@@ -76,10 +88,24 @@ public class ChatWindow extends JFrame {
         add(panBottom, BorderLayout.SOUTH);
         setVisible(true);
 
+        fldMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //System.out.println("press");
+                if (!fldMessage.getText().equals("")) {
+                    btnSend.doClick();
+                    fldMessage.setText("");
+                    Toolkit.getDefaultToolkit().beep();
+                }
+            }
+        });
+
         btnSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 txtArea.append(fldLogin.getText() + ": " + fldMessage.getText() + "\n");
+                fldMessage.setText("");
+                Toolkit.getDefaultToolkit().beep();
             }
         });
 
@@ -88,6 +114,7 @@ public class ChatWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(false);
                 btnDisconnect.setEnabled(true);
+                fldMessage.setEnabled(true);
                 btnSend.setEnabled(true);
                 lblCurState.setText("Connected");
                 fldLogin.setEnabled(false);
@@ -101,6 +128,7 @@ public class ChatWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 btnConnect.setEnabled(true);
                 btnDisconnect.setEnabled(false);
+                fldMessage.setEnabled(false);
                 btnSend.setEnabled(false);
                 lblCurState.setText("Disconnected");
                 fldLogin.setEnabled(true);
