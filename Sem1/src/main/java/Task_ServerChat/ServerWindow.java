@@ -65,10 +65,4 @@ public class ServerWindow extends JFrame {
             }
         });
     }
-
-//    void startNewGame(int mode, int x, int y, int winLen) {
-//        map.setFieldSizeX(x);
-//        map.setFieldSizeY(y);
-//        map.startNewGame(mode, winLen);
-//    }
 }
