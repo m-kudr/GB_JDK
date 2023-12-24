@@ -1,17 +1,17 @@
-package Task_ServerChat;
+package Chat.Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 import java.io.*;
 
 public class ChatWindow extends JFrame {
-    private static final String TITLE = "Chat client settings"; // заголовок окна
+    private static final String TITLE = "Chat client"; // заголовок окна
     JButton btnConnect = new JButton("Connect");
     JButton btnDisconnect = new JButton("Disconnect");
     JButton btnSend = new JButton("SEND MESSAGE");
 
-    public void safeToFile(String pathFile, String text) {
+    public static void safeToFile(String pathFile, String text) {
         try (FileWriter file = new FileWriter(pathFile, true)) {
             file.write(text + '\n');
             file.flush();
@@ -21,20 +21,20 @@ public class ChatWindow extends JFrame {
         }
     }
 
-    public String readFile(String pathFile) {
-        String text = "";
+    public static String readFile(String pathFile) {
+        StringBuilder text = new StringBuilder();
         try (FileReader reader = new FileReader(pathFile)) {
             int c; // читаем посимвольно
             while ((c = reader.read()) != -1) {
-                text += (char) c;
+                text.append((char) c);
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return text;
+        return text.toString();
     }
 
-    public ChatWindow(int scrWidth, int scrHeight) throws FileNotFoundException {
+    public ChatWindow(int scrWidth, int scrHeight) {
         String pathFile = ".//history.log";      //файл истории чата
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         int windowWidth = 400;                          // ширина окна
@@ -127,55 +127,43 @@ public class ChatWindow extends JFrame {
         add(panBottom, BorderLayout.SOUTH);
         setVisible(true);
 
-        fldMessage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!fldMessage.getText().equals("")) {
-                    btnSend.doClick();
-                    fldMessage.setText("");
-                    Toolkit.getDefaultToolkit().beep();
-                }
-            }
-        });
-
-        btnSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String str = fldLogin.getText() + ": " + fldMessage.getText();
-                txtArea.append(str + "\n");
-                safeToFile(pathFile, str);
+        fldMessage.addActionListener(e -> {
+            if (!fldMessage.getText().equals("")) {
+                btnSend.doClick();
                 fldMessage.setText("");
                 Toolkit.getDefaultToolkit().beep();
             }
         });
 
-        btnConnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnConnect.setEnabled(false);
-                btnDisconnect.setEnabled(true);
-                fldMessage.setEnabled(true);
-                btnSend.setEnabled(true);
-                lblCurState.setText("Connected");
-                fldLogin.setEnabled(false);
-                fldPassword.setEnabled(false);
-                fldServer.setEnabled(false);
-                txtArea.setText(readFile(pathFile));
-            }
+        btnSend.addActionListener(e -> {
+            String str = fldLogin.getText() + ": " + fldMessage.getText();
+            txtArea.append(str + "\n");
+            safeToFile(pathFile, str);
+            fldMessage.setText("");
+            Toolkit.getDefaultToolkit().beep();
         });
 
-        btnDisconnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnConnect.setEnabled(true);
-                btnDisconnect.setEnabled(false);
-                fldMessage.setEnabled(false);
-                btnSend.setEnabled(false);
-                lblCurState.setText("Disconnected");
-                fldLogin.setEnabled(true);
-                fldPassword.setEnabled(true);
-                fldServer.setEnabled(true);
-            }
+        btnConnect.addActionListener(e -> {
+            btnConnect.setEnabled(false);
+            btnDisconnect.setEnabled(true);
+            fldMessage.setEnabled(true);
+            btnSend.setEnabled(true);
+            lblCurState.setText("Connected");
+            fldLogin.setEnabled(false);
+            fldPassword.setEnabled(false);
+            fldServer.setEnabled(false);
+            txtArea.setText(readFile(pathFile));
+        });
+
+        btnDisconnect.addActionListener(e -> {
+            btnConnect.setEnabled(true);
+            btnDisconnect.setEnabled(false);
+            fldMessage.setEnabled(false);
+            btnSend.setEnabled(false);
+            lblCurState.setText("Disconnected");
+            fldLogin.setEnabled(true);
+            fldPassword.setEnabled(true);
+            fldServer.setEnabled(true);
         });
     }
 }

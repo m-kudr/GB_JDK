@@ -1,15 +1,15 @@
-package Task_ServerChat;
+package Chat.Server;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
 
 public class ServerWindow extends JFrame {
     private static final String TITLE = "Server control";
     JButton btnStart = new JButton("START");
     JButton btnStop = new JButton("STOP");
-    boolean serverIsRun = false;
+
 
     public ServerWindow(int scrWidth, int scrHeight) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -38,31 +38,22 @@ public class ServerWindow extends JFrame {
         add(panBottom, BorderLayout.SOUTH);
         setVisible(true);
 
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverIsRun = true;
-                System.out.println("SERVER STARTED!");
-                btnStart.setEnabled(false);
-                btnStop.setEnabled(true);
-                btnStop.setSelected(true);
-                state.setText("ЗАПУЩЕН");
-                setBackground(Color.GREEN);
-            }
+        btnStart.addActionListener(e -> {
+            Demon.Start();
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
+            btnStop.setSelected(true);
+            state.setText("ЗАПУЩЕН");
+            setBackground(Color.GREEN);
         });
 
-        btnStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverIsRun = false;
-                System.out.println("SERVER STOPPED!");
-                btnStart.setEnabled(true);
-                btnStart.setSelected(true);
-                btnStop.setEnabled(false);
-                state.setText("ОСТАНОВЛЕН");
-                setBackground(Color.RED);
-                //System.exit(0);
-            }
+        btnStop.addActionListener(e -> {
+            Demon.Stop();
+            btnStart.setEnabled(true);
+            btnStart.setSelected(true);
+            btnStop.setEnabled(false);
+            state.setText("ОСТАНОВЛЕН");
+            setBackground(Color.RED);  //System.exit(0);
         });
     }
 }

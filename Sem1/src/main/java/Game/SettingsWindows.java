@@ -1,11 +1,11 @@
-package TestWindow;
+package Game;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+//import javax.swing.event.ChangeEvent;
+//import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
 
 public class SettingsWindows extends JFrame {
     private static final int WINDOW_HEIGHT = 230;
@@ -26,8 +26,11 @@ public class SettingsWindows extends JFrame {
     JPanel panBottom;
 
     SettingsWindows(GameWindow gameWindow) {
-        setLocationRelativeTo(gameWindow);
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        //setLocationRelativeTo(gameWindow);
+        //центровка окна
+        setLocation(gameWindow.getLocation().x + gameWindow.getWidth() / 2 - WINDOW_WIDTH / 2,
+                gameWindow.getLocation().y + gameWindow.getHeight() / 2 - WINDOW_HEIGHT / 2);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT); //размер окна
         setTitle("Game Settings");
         panBottom = new JPanel(new GridLayout(9, 1));
         rbHumVsPC.setRolloverEnabled(true);
@@ -45,26 +48,13 @@ public class SettingsWindows extends JFrame {
         panBottom.add(slWinCount);
         slWinCount.setValue(3);
         panBottom.add(btnStart);
-        slField.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                lGameFields.setText(LABEL_FIELD_SIZE + slField.getValue());
-            }
-        });
-        slWinCount.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                lSetWinCount.setText(WIN_STRIP_SIZE + slWinCount.getValue());
-            }
-        });
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //System.out.printf("StartNewGame(%d,%d,%d,%d)", 0, slField.getValue(), slField.getValue(), slWinCount.getValue());
-                if (slWinCount.getValue() <= slField.getValue()) {
-                    gameWindow.startNewGame(rbHumVsPC.isSelected()?0:1, slField.getValue(), slField.getValue(), slWinCount.getValue());
-                    setVisible(false);
-                }
+        slField.addChangeListener(e -> lGameFields.setText(LABEL_FIELD_SIZE + slField.getValue()));
+        slWinCount.addChangeListener(e -> lSetWinCount.setText(WIN_STRIP_SIZE + slWinCount.getValue()));
+        btnStart.addActionListener(e -> {
+            //System.out.printf("StartNewGame(%d,%d,%d,%d)", 0, slField.getValue(), slField.getValue(), slWinCount.getValue());
+            if (slWinCount.getValue() <= slField.getValue()) {
+                gameWindow.startNewGame(rbHumVsPC.isSelected() ? 0 : 1, slField.getValue(), slField.getValue(), slWinCount.getValue());
+                setVisible(false);
             }
         });
         add(panBottom);

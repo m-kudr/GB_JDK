@@ -1,4 +1,4 @@
-package TestWindow;
+package Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,36 +12,22 @@ public class GameWindow extends JFrame {
     //private static final int WINDOW_POSY = 300;
     Map map;
     SettingsWindows settings;
-    JButton btnStart = new JButton("Start New Game");
+    JButton btnStart = new JButton("Start new game");
     JButton btnExit = new JButton("Exit");
 
-    public GameWindow(int scrWidth, int scrHeight) {
+    public GameWindow(int x, int y, int scrWidth, int scrHeight) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setLocation(WINDOW_POSX, WINDOW_POSY);
+        setSize(scrHeight / 3, scrWidth / 3 + 50); //размер окна на 1/3 от размера экрана
+        setLocation(x - getHeight() / 2, y - getWidth() / 2); //центровка окна
         //setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setLocation(scrWidth / 3, scrHeight / 3);
-        setSize(scrHeight / 3, scrHeight / 3 + 50);
+        //setLocation(scrWidth / 3, scrHeight / 3);
         setTitle("Игра \"Крестики-нолики\"");
         setResizable(false);
         toBack();
         map = new Map();
-
         settings = new SettingsWindows(this); //создание окна с настройками игры
-        settings.toFront();
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                settings.setVisible(true);
-            }
-        });
-        settings.setVisible(true);
-
-        btnExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        btnStart.addActionListener(e -> settings.setVisible(true));
+        btnExit.addActionListener(e -> System.exit(0));
 
         JPanel panBottom = new JPanel(new GridLayout(1, 2));
         panBottom.add(btnStart);
@@ -49,6 +35,8 @@ public class GameWindow extends JFrame {
         add(panBottom, BorderLayout.SOUTH);
         add(map);
         setVisible(true);
+        settings.setVisible(true);
+        //settings.toFront();
     }
 
     void startNewGame(int mode, int x, int y, int winLen) {

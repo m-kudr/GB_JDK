@@ -1,4 +1,4 @@
-package TestWindow;
+package Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Map extends JPanel {
     private static final Random RANDOM = new Random();
-    private final int DOT_PADDING = 5;
+    private static final int DOT_PADDING = 5;
     private int gameOverType;
     private static final int STATE_DRAW = 0;
     private static final int STATE_WIN_HUMAN = 1;
@@ -25,8 +25,8 @@ public class Map extends JPanel {
     private int fieldSizeX = 3;
     private int[][] field;
 
-    private int panelWidth;
-    private int panelHeight;
+    private static int panelWidth;
+    private static int panelHeight;
     private int cellHeight;
     private int cellWidth;
     private boolean isGameOver;
@@ -116,9 +116,7 @@ public class Map extends JPanel {
         int[] diagB = new int[field.length]; // получение диагонали B
         for (int i = 0; i < field.length; i++)
             diagB[i] = field[field.length - 1 - i][i];
-        if (isLineFull(diagB)) return true; // проверка диагонали B
-
-        return false;
+        return isLineFull(diagB); // проверка диагонали B
     }
 
     Map() {
@@ -148,7 +146,7 @@ public class Map extends JPanel {
         if (isGameEnd(HUMAN_DOT, STATE_WIN_HUMAN)) return;
         aiTurn();
         repaint();
-        if (isGameEnd(AI_DOT, STATE_WIN_AI)) return;
+        //if (isGameEnd(AI_DOT, STATE_WIN_AI)) {     }
     }
 
     private boolean isGameEnd(int dot, int gameOverType) {
