@@ -5,13 +5,12 @@ import java.awt.*;
 
 //import static Chat.Server.Server.*;
 
-public class ServerWindow extends JFrame implements ChatServerListener{
+public class ServerWindow extends JFrame implements Listener {
     private static final String TITLE = "Server control";
     JButton btnStart = new JButton("START");
     JButton btnStop = new JButton("STOP");
     JButton btnExit = new JButton("EXIT");
-
-    Server server = new Server(this);
+    ServerListener server = new Server(this);
 
     public ServerWindow(int scrWidth, int scrHeight) {
         //setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -42,7 +41,7 @@ public class ServerWindow extends JFrame implements ChatServerListener{
         setVisible(true);
 
         btnStart.addActionListener(e -> {
-            server.Start();
+            server.action(true);
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
             btnStop.setSelected(true);
@@ -51,17 +50,19 @@ public class ServerWindow extends JFrame implements ChatServerListener{
         });
 
         btnStop.addActionListener(e -> {
-            server.Stop();
+//            server.stop();
+            server.action(false);
             btnStart.setEnabled(true);
             btnStart.setSelected(true);
             btnStop.setEnabled(false);
             state.setText("ОСТАНОВЛЕН");
-            state.setBackground(Color.RED);  //System.exit(0);
+            state.setBackground(Color.RED);
         });
 
         btnExit.addActionListener(e -> {
             if (Server.isServerRun) {
-                server.Stop();
+//                server.stop();
+                server.action(false);
             }
             System.out.println("Close program \"Chat server\"");
             System.exit(0);
@@ -69,7 +70,7 @@ public class ServerWindow extends JFrame implements ChatServerListener{
     }
 
     @Override
-    public void onMessageReceive(String msg) {
-        System.out.println(msg);
+    public void msgRes(String msg) {
+        System.out.println("msg");
     }
 }
